@@ -4,6 +4,8 @@ from typing import Annotated
 import pandas as pd
 from fastapi import FastAPI, Path, Query, HTTPException
 
+from image_search import search_images
+
 app = FastAPI()
 data = {}
 TAGS = [
@@ -28,7 +30,9 @@ async def root(
         q: Annotated[str | None, Query(alias="item-query")] = None,
 ):
     validate_query(query)
-    return {"imageNames": convert_query(query)}
+    tags = convert_query(query)
+    images = search_images(tags, data['df'])
+    return {"imageNames": images}
 
 
 def validate_query(query: str):
