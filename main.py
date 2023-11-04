@@ -1,10 +1,11 @@
 import re
 from typing import Annotated
 
+import pandas as pd
 from fastapi import FastAPI, Path, Query, HTTPException
 
 app = FastAPI()
-
+data = {}
 TAGS = [
   ["유직", "무직"],
   ["활동", "휴식"],
@@ -13,6 +14,12 @@ TAGS = [
   ["흥미", "화남", "행복", "사랑", "신남" ,"허탈", "냉소", "지루", "속상"],
   ["거지", "부자"]
 ]
+
+
+@app.on_event('startup')
+def init_data():
+    df = pd.read_csv('images.csv')
+    data["df"] = df
 
 
 @app.get("/api/images/{query}")
