@@ -1,31 +1,26 @@
 import re
 from typing import Annotated
 
-import pandas as pd
-from fastapi import FastAPI, Path, Query, HTTPException
+from fastapi import APIRouter, Path, Query, HTTPException
 
-from image_search import search_images
+from app.api.v1.endpoints.image_search import search_images
 
-app = FastAPI()
+
+router = APIRouter()
 data = {}
+
 TAGS = [
   ["유직", "무직"],
   ["활동", "휴식"],
   ["바쁨", "여유"],
   ["심심", "유흥", "지침", "귀가"],
-  ["흥미", "화남", "행복", "사랑", "신남" ,"허탈", "냉소", "지루", "속상"],
+  ["흥미", "화남", "행복", "사랑", "신남", "허탈", "냉소", "지루", "속상"],
   ["거지", "부자"]
 ]
 
 
-@app.on_event('startup')
-def init_data():
-    df = pd.read_csv('images.csv')
-    data["df"] = df
-
-
-@app.get("/api/images/{query}")
-async def root(
+@router.get("/{query}")
+async def get_images(
         query: Annotated[str, Path(title="Decimal tags for image query")],
         q: Annotated[str | None, Query(alias="item-query")] = None,
 ):
