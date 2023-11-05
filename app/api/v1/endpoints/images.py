@@ -21,8 +21,7 @@ TAGS = [
 
 @router.get("/{query}")
 async def get_images(
-        query: Annotated[str, Path(title="Decimal tags for image query")],
-        q: Annotated[str | None, Query(alias="item-query")] = None,
+        query: Annotated[str, Path(title="Decimal tags for image query")]
 ):
     validate_query(query)
     tags = convert_query(query)
