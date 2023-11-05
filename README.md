@@ -1,5 +1,9 @@
 # Right Meme Right Now API Server
 ## API Document
+API server URI:   
+`http://43.202.207.202:8000/`
+
+Document:    
 [Swagger](http://43.202.207.202:8000/docs)
 
 ## 구동
