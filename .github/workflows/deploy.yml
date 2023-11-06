@@ -1,0 +1,50 @@
+name: Docker Image CD
+
+on:
+  push:
+    branches: [ "main" ]
+
+env:
+  CODEDEPLOY_NAME: rmrn-api-server
+  CODEDEPLOY_GROUP: rmrn-api-server-deployment-group
+
+jobs:
+  build:
+    name: Build Docker Image and Push it to ECR
+    runs-on: ubuntu-22.04
+    environment: production
+    
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v3
+
+    - name: Get authenticated
+      run: aws ecr-public get-login-password --region ${{ secrets.AWS_REGION }} | docker login --username AWS --password-stdin public.ecr.aws/h6q2u6o2
+      
+    - name: Build the Docker image
+      run: docker build -t rmrn-api-server .
+
+    - name: Change Image tags
+      run: docker tag rmrn-api-server:latest public.ecr.aws/h6q2u6o2/rmrn-api-server:latest
+
+    - name: Push the Docker Image to ECR
+      run: docker push public.ecr.aws/h6q2u6o2/rmrn-api-server:latest
+
+  deploy:
+    needs: build
+    name: Start AWS CodeDeploy
+    runs-on: ubuntu-22.04
+    
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ secrets.AWS_REGION }}
+
+      - name: Run Code Deploy
+        run: aws deploy create-deployment --application-name $CODEDEPLOY_NAME --deployment-config-name CodeDeployDefault.AllAtOnce --deployment-group-name $CODEDEPLOY_GROUP --description "Deploying from GitHub Actions" --github-location repository=${{github.repository}},commitId=${{ github.sha }}
