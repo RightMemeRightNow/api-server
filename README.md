@@ -1,4 +1,10 @@
 # Right Meme Right Now API Server
+## API Document
+API server URI:   
+`https://api.right-meme-right-now.site/`
+
+Document:    
+[Swagger](https://api.right-meme-right-now.site/docs)
 
 ## 구동
 ### Docker
