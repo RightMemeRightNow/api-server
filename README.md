@@ -1,10 +1,10 @@
 # Right Meme Right Now API Server
 ## API Document
 API server URI:   
-`http://43.202.207.202:8000/`
+`https://api.right-meme-right-now.site/`
 
 Document:    
-[Swagger](http://43.202.207.202:8000/docs)
+[Swagger](https://api.right-meme-right-now.site/docs)
 
 ## 구동
 ### Docker
