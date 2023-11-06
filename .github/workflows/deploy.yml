@@ -26,7 +26,7 @@ jobs:
         aws-region: ${{ secrets.AWS_REGION }}
 
     - name: Get authenticated
-      run: aws ecr-public get-login-password --region ${{ secrets.AWS_REGION }} | docker login --username AWS --password-stdin public.ecr.aws/h6q2u6o2
+      run: aws ecr-public get-login-password --region ${{ secrets.AWS_REGION }} | docker login --username AWS --password-stdin public.ecr.aws/h6q2u6o2/rmrn-api-server
       
     - name: Build the Docker image
       run: docker build -t rmrn-api-server .
